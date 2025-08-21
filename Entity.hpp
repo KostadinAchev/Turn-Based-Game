@@ -1,18 +1,7 @@
+#ifndef ENTITY_HPP
+#define ENTITY_HPP
 #include <iostream>
 
-enum armorType
-{
-    UNARMORED = 0,
-    LEATHER = 25,
-    MEDIUM =50,
-    HEAVY= 75
-};
-
-enum goodOrBad
-{
-    GOOD,
-    BAD
-};
 
 // virtual entity class
 // identation
@@ -20,8 +9,35 @@ enum goodOrBad
 class Entity
 {
 public:
+
+    enum armorType
+    {
+        UNARMORED = 0,
+        LEATHER = 25,
+        MEDIUM = 50,
+        HEAVY= 75
+    };
+
+    std::string getArmorType(int armorType){
+        switch (armorType){
+            case 0  : return "Unarmored";
+            case 25 : return "Leather"; 
+            case 50 : return "Medium"; 
+            case 75 : return "Heavy"; 
+            
+
+        }
+    }
+
+    enum goodOrBad
+    {
+        GOOD,
+        BAD
+    };
+
+
     // fast constructor to make
-    Entity(std::string type, int health, armorType aType, int armor, goodOrBad gOb, int damage, int moneyCost, bool mana, bool isAlive)
+    Entity(std::string type, float health, armorType aType, int armor, goodOrBad gOb, int damage, int moneyCost, int mana, bool manaBool, bool isAlive)
     {
         this->m_type = type;
         this->m_health = health;
@@ -31,14 +47,15 @@ public:
         this->m_damage = damage;
         this->m_moneyCost = moneyCost;
         this->m_mana = mana;
+        this->m_manaBool = manaBool;
         this->m_isAlive = isAlive;
     }
 
     // Done but idk if logic is good may need further improvements
     virtual void Attack(Entity *attacker, Entity *target)
     {
-        int healthAfterDmg;
-        if (target->get_alive() == true && attacker->get_alive() == true)
+        float healthAfterDmg=0;
+        if (target->get_is_alive() == true && attacker->get_is_alive() == true)
         {
 
             if (attacker->get_damage() <= 0)
@@ -47,68 +64,101 @@ public:
             }
             if (target->get_health() <= 0)
             {
-                target->set_alive(false);
+                target->set_is_alive(false);
             }
             else
             {
                 if(target->get_armor() > 0)
                 {
-                    healthAfterDmg = target->get_health() - static_cast<float>(attacker->get_damage() * target->get_armorType()/100 );
-                    target->set_health(healthAfterDmg);
-                    std::cout << attacker->get_type() << " Delt: " << healthAfterDmg << " damage to: " << target->get_type() << '\n';
+                    float reduction = static_cast<float>(100 - target->get_armorType()) / 100.0f;
+                    healthAfterDmg = target->get_health() - (attacker->get_damage() * reduction);
+                    target->set_health(healthAfterDmg);                   
+                    std::cout << attacker->get_type() << " Delt: " << attacker->get_damage() << " damage to: " << target->get_type() << " Health remaining: "<< target->get_health()<< '\n';
+                    target->set_armor(target->get_armor() - 1);
+                    if (target->get_health() <= 0)
+                    {
+                        target->set_is_alive(false);
+                    }
+                
                 }
                 else
                 {
                     healthAfterDmg = target->get_health() - attacker->get_damage();
                     target->set_health(healthAfterDmg);
-                    std::cout << attacker->get_type() << " Delt: " << healthAfterDmg << " damage to: " << target->get_type() << '\n';
+                    std::cout << attacker->get_type() << " Delt: " << attacker->get_damage() << " damage to: " << target->get_type() << " Health remaining: "<< target->get_health()<< '\n';
+                    if (target->get_health() <= 0)
+                    {
+                        target->set_is_alive(false);
+                    }
+                
                 }
 
             }
         }
-        else if (target->get_alive() == false)
+        else if (target->get_is_alive() == false)
         {
-            death(target);
+            target->death();
         }
     }
 
-    void printInfo(Entity *e)
+    void printInfo()
     {
-        std::cout << " Type: " << e->get_type() << " Health " << e->get_health() << " Armor " << e->get_armor() << " Damage " << e->get_damage() << " Cost " << e->get_moneyCost() << " Alive State " << e->get_alive() << std::endl;
+        std::cout << " Type: " << get_type() << " | Health " << get_health() << " | Armor Type " << getArmorType(get_armorType())  << " | Armor " << get_armor() << " | Damage " << get_damage() << " | Cost " << get_moneyCost() << " | Mana " << get_mana() << " | Mana State " << (get_manaBool()? " True " : " False ") << " | Alive State " << get_is_alive() << std::endl;
     }
 
-    virtual void death(Entity *target)
+    virtual void death()
     {
-        target->set_health(0);
-        std::cout << target->get_type() << " died" << std::endl;
+        set_health(0);
+        std::cout << get_type() << " died" << std::endl;
     }
 
-    int get_health() { return m_health; }
-
-    void set_health(int new_health) { this->m_health = new_health; }
+    float get_health() { return m_health; }
 
     int get_armor() { return m_armor; }
 
-    int get_armorType() {return m_armorType; }
+    armorType get_armorType() {return m_armorType; }
 
     int get_damage() { return m_damage; }
 
     int get_moneyCost() { return m_moneyCost; }
 
+    int get_mana() { return m_mana; }
+
+    bool get_manaBool() { return m_manaBool; }
+
     std::string get_type() { return m_type; }
 
-    bool get_alive() { return m_isAlive; }
+    bool get_is_alive() { return m_isAlive; }
 
-    void set_alive(bool state) { this->m_isAlive = state; }
+protected:
+
+    void set_type(std::string new_name) { this->m_type = new_name; }
+
+    void set_health(float new_health) { this->m_health = new_health; }
+
+    void set_mana(int new_mana) { this->m_mana = new_mana; }
+    
+    void set_manaBool(bool new_mana_state) { this->m_manaBool = new_mana_state; }
+    
+    void set_is_alive(bool state) { this->m_isAlive = state; }
+    
+    void set_armor(int armor) { this->m_armor = armor; }
+
+    void set_armorType (armorType armorType) { this->m_armorType = armorType; }
 
 private:
     std::string m_type;
-    int m_health;
+    float m_health;
     int m_armor;
     enum armorType m_armorType;
     enum goodOrBad m_goodOrBad;
     int m_damage;
     int m_moneyCost;
-    bool m_mana;
+    bool m_manaBool;
+    int m_mana;
     bool m_isAlive;
+
+
 };
+
+#endif
