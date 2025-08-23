@@ -6,7 +6,8 @@
 
 class Zombie : public Entity{
 public:
-    Zombie() : Entity("Zombie", 250, UNARMORED, 0, BAD, 15, 300, 0, false, true){};
+//    type || health || maxHP || armorType || armor || goodOrBad || damage || moneyCost || mana || maxMP || minManaSpell || manaBool || isAlive
+    Zombie() : Entity("Zombie", 250, 250, UNARMORED, 0, BAD, 15, 300, 0, 0, 0, false, true){};
 };
 
 #endif

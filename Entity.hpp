@@ -37,104 +37,48 @@ public:
 
 
     // fast constructor to make
-    Entity(std::string type, float health, armorType aType, int armor, goodOrBad gOb, int damage, int moneyCost, int mana, bool manaBool, int minManaSpell, bool isAlive)
+    Entity(std::string type, float health, float maxHP, armorType aType, int armor, goodOrBad gOb, int damage, int moneyCost, int mana, int maxMP, int minManaSpell, bool manaBool, bool isAlive)
     {
         this->m_type = type;
         this->m_health = health;
+        this->m_maxHP = maxHP;
         this->m_armorType = aType;
         this->m_goodOrBad = gOb;
         this->m_armor = armor;
         this->m_damage = damage;
         this->m_moneyCost = moneyCost;
         this->m_mana = mana;
-        this->m_manaBool = manaBool;
+        this->m_maxMP = maxMP;
         this->m_minManaSpell = minManaSpell;
+        this->m_manaBool = manaBool;
         this->m_isAlive = isAlive;
     }
 
     // Done but idk if logic is good may need further improvements
-    virtual void Attack(Entity *target)
-    {
-        float healthAfterDmg=0;
-        if (target->get_is_alive() == true && get_is_alive() == true)
-        {
+    void Damage_NoReduction(Entity *target);
+    void Damage_Reduction(Entity *target);
+    void manaRegen();
 
-            if (get_damage() <= 0)
-            {
-                std::cout << "No Damage Delt!" << std::endl;
-            }
-            if (target->get_health() <= 0)
-            {
-                target->set_is_alive(false);
-            }
-            else
-            {
-                if(target->get_armor() > 0)
-                {
-                    //finish mana logic + implement for no mana attack with same reduction and everything
-                    if(get_manaBool() == true && get_mana() >= get_minManaAttack())
-                    {
+    
+    virtual void Attack(Entity *target);
 
-                        float reduction = static_cast<float>(100 - target->get_armorType()) / 100.0f;
-                        healthAfterDmg = target->get_health() - (get_damage() * reduction);
-                        target->set_health(healthAfterDmg);                   
-                        std::cout << get_type() << " Delt: " << get_damage() << " damage to: " << target->get_type() << " Health remaining: "<< target->get_health()<< '\n';
-                        target->set_armor(target->get_armor() - 1);
-                        if (target->get_health() <= 0)
-                        {
-                            target->set_is_alive(false);
-                        }
+    void printInfo();
 
-                        set_mana(get_mana()- get_minManaAttack()); 
+    virtual void death();
 
-                    }
-                    float reduction = static_cast<float>(100 - target->get_armorType()) / 100.0f;
-                    healthAfterDmg = target->get_health() - (get_damage() * reduction);
-                    target->set_health(healthAfterDmg);                   
-                    std::cout << get_type() << " Delt: " << get_damage() << " damage to: " << target->get_type() << " Health remaining: "<< target->get_health()<< '\n';
-                    target->set_armor(target->get_armor() - 1);
-                    if (target->get_health() <= 0)
-                    {
-                        target->set_is_alive(false);
-                    }
-                
-                }
-                else
-                {
-                    healthAfterDmg = target->get_health() - get_damage();
-                    target->set_health(healthAfterDmg);
-                    std::cout << get_type() << " Delt: " << get_damage() << " damage to: " << target->get_type() << " Health remaining: "<< target->get_health()<< '\n';
-                    if (target->get_health() <= 0)
-                    {
-                        target->set_is_alive(false);
-                    }
-                
-                }
+    virtual void Heal(Entity *target);
 
-            }
-        }
-        else if (target->get_is_alive() == false)
-        {
-            target->death();
-        }
-    }
-
-    void printInfo()
-    {
-        std::cout << " Type: " << get_type() << " | Health " << get_health() << " | Armor Type " << getArmorType(get_armorType())  << " | Armor " << get_armor() << " | Damage " << get_damage() << " | Cost " << get_moneyCost() << " | Mana " << get_mana() << " | Mana State " << (get_manaBool()? " True " : " False ") << " | Alive State " << get_is_alive() << std::endl;
-    }
-
-    virtual void death()
-    {
-        set_health(0);
-        std::cout << get_type() << " died" << std::endl;
-    }
+    // geters
 
     float get_health() { return m_health; }
 
+    int get_maxHP() { return m_maxHP; }
+
     int get_armor() { return m_armor; }
 
-    armorType get_armorType() {return m_armorType; }
+    armorType get_armorType() { return m_armorType; }
+
+    goodOrBad get_fraction() { return m_goodOrBad; }
 
     int get_damage() { return m_damage; }
 
@@ -144,13 +88,17 @@ public:
 
     int get_mana() { return m_mana; }
 
-    int get_minManaAttack() { return m_minManaSpell; }
+    int get_maxMP() { return m_maxMP; }
+
+    int get_minManaSpell() { return m_minManaSpell; }
 
     std::string get_type() { return m_type; }
 
     bool get_is_alive() { return m_isAlive; }
 
-protected:
+    
+
+    // Setters 
 
     void set_type(std::string new_name) { this->m_type = new_name; }
 
@@ -170,6 +118,7 @@ protected:
 
 private:
     std::string m_type;
+    float m_maxHP;
     float m_health;
     int m_armor;
     enum armorType m_armorType;
@@ -177,6 +126,7 @@ private:
     int m_damage;
     int m_moneyCost;
     bool m_manaBool;
+    int m_maxMP;
     int m_mana;
     int m_minManaSpell;
     bool m_isAlive;
