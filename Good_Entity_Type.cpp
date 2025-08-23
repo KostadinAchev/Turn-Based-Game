@@ -29,6 +29,7 @@ class Healer : public Entity{
 
     void Heal(Entity *target) override
     {
+        
         if(target->get_fraction() == GOOD)
         {
             if(get_mana() >= get_minManaSpell()){
