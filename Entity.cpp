@@ -2,10 +2,16 @@
 #define ENTITY_CPP
 #include "Entity.hpp"
 
+#define MANA_PER_TURN 75
+
+// deadBodyCount for keeping track of dead bodies on the battlefield
 int Entity::deadBodyCount = 0;
 
+// damage reduction function uses the armor type of the targetet entity and applies protection to them
 void Entity::Damage_Reduction(Entity *target)
 {
+    // armorDurability is how many hits the target has with the armor protection
+    // reduction ammount 100 being the max damage reduction as % - armor type(heavy = 75) / 100 for %
     float reduction = (100 - target->get_armorType()) / 100.0f;
     float healthAfterDmg = target->get_health() - (get_damage() * reduction);
     target->set_health(healthAfterDmg);
@@ -17,6 +23,7 @@ void Entity::Damage_Reduction(Entity *target)
               << "========================================================================================" << '\n';
 }
 
+// damage function with no reduction meaning it's being used after armorDurability = 0
 void Entity::Damage_NoReduction(Entity *target)
 {
     float healthAfterDmg = target->get_health() - get_damage();
@@ -28,6 +35,7 @@ void Entity::Damage_NoReduction(Entity *target)
               << "========================================================================================" << '\n';
 }
 
+// checks if the target is alive
 void Entity::is_alive_check(Entity *target)
 {
     if (target->get_health() <= 0)
@@ -35,15 +43,15 @@ void Entity::is_alive_check(Entity *target)
         target->set_is_alive(false);
     }
 }
-// Done but idk if logic is good may need further improvements
+
+// regenerates mana after every turn
 void Entity::manaRegen()
 {
-
-    int manaPerTurn = 75;
-    set_mana(get_mana() + manaPerTurn);
+    set_mana(get_mana() + MANA_PER_TURN);
     std::cout << "Mana after regeneration: " << get_mana() << '\n';
 }
 
+// after the death of an entity it's health gets set to 0 and it's is_alive state to false
 void Entity::death()
 {
     if (!get_is_alive())
@@ -55,11 +63,13 @@ void Entity::death()
     Entity::incrementDeadBody();
 }
 
+// main attack function it uses other function mentioned above
 void Entity::Attack(Entity *target)
 {
     if (target->get_is_alive() != true || get_is_alive() != true)
     {
-        std::cout << " Target is: " << (target->get_is_alive() ? "Alive" : "Dead") << " Attacker is : " << (get_is_alive() ? "Alive" : "Dead");
+        std::cout << " Attacker : " << get_type() << " || " << " Target is: " << (target->get_is_alive() ? "Alive" : "Dead") << " Attacker is : " << (get_is_alive() ? "Alive" : "Dead") << std::endl
+                  << "========================================================================================" << '\n';
         return;
     }
     if (target->get_is_alive() == true && get_is_alive() == true)
@@ -77,15 +87,14 @@ void Entity::Attack(Entity *target)
             {
                 // damage reduction func
                 Damage_Reduction(target);
-                is_alive_check(target);
             }
             else
             {
                 // damage with no reduction
                 Damage_NoReduction(target);
                 // is alive check
-                is_alive_check(target);
             }
+            is_alive_check(target);
         }
     }
     else if (target->get_health() <= 0)
@@ -103,21 +112,40 @@ void Entity::Attack(Entity *target)
     }
 }
 
+// prints the info of the Entity
 void Entity::printInfo()
 {
 
-    std::cout << " Type: " << get_type() << " | Health " << get_health() << " | Armor Type " << getArmorType(get_armorType()) << " | Armor " << get_armorDurability() << " | Damage " << get_damage() << " | Cost " << get_moneyCost() << " | Mana " << get_mana() << " | Mana State " << (get_isCaster() ? " True " : " False ") << " | Alive State " << get_is_alive() << std::endl;
+    std::cout << " Type: " << get_type() << " | Health " << get_health() << " | Armor Type " << armorType2str(get_armorType()) << " | Armor " << get_armorDurability() << " | Damage " << get_damage() << " | Cost " << get_moneyCost() << " | Mana " << get_mana() << " | Mana State " << (get_isCaster() ? " True " : " False ") << " | Alive State " << get_is_alive() << std::endl;
     std::cout << '\n'
               << "========================================================================================" << '\n';
 }
 
-void Entity::Heal(Entity *target)
-{
-    target->set_mana(get_mana() - get_minManaSpell());
-}
+// stays virtual because there are 3 different healers which override it because I can't seem to find common logic between them, I am dumb
+void Entity::Heal(Entity *target) {};
 
+// used as a helper function for Heal because it can't access set methods outside the Entity class when we use class inheritance
 void Entity::healingDone(Entity *target, float healing)
 {
-    target->set_health(get_health() + healing);
+    if ((target->get_health() + healing) > target->get_maxHP())
+    {
+        target->set_health(get_maxHP());
+    }
+    else
+        target->set_health(get_health() + healing);
 }
+
+// used for reviving dead entities
+void Entity::revive(Entity *target)
+{
+    if (target->get_is_alive() == false && target->get_faction() == get_faction())
+    {
+        target->set_health(0.3 * target->get_maxHP());
+    }
+    else
+    {
+        std::cout << "Can't revive target from different fraction";
+    }
+}
+
 #endif
