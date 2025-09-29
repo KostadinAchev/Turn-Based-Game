@@ -1,3 +1,5 @@
+#ifndef GAME_UI_CPP
+#define GAME_UI_CPP
 #include <iostream>
 #include "Entity.hpp"
 
@@ -25,148 +27,19 @@ void choice_Ui()
     }
 }
 
-void print_Infantryman_Ui()
+//clang-format off
+void print_Ui(Entity *e)
 {
-    std::cout << "=======================================";
-    std::cout << "|              INFANTRYMAN            |";
-    std::cout << "|                                     |";
-    std::cout << "|              1. Attack              |";
-    std::cout << "|              2. Special             |";
-    std::cout << "|                                     |";
-    std::cout << "|              0. Skip                |";
-    std::cout << "=======================================";
+    std::cout << "=========================================" << std::endl;
+    std::cout << "|\t\t" << e->get_type() << "\t\t\t      |" << std::endl;
+    std::cout << "|\t\t\t\t\t                             |" << std::endl;
+    std::cout << "|\t\t         1. Attack\t\t             |" << std::endl;
+    std::cout << "|\t\t         2. Special\t\t            |" << std::endl;
+    std::cout << "|\t\t\t\t\t                             |" << std::endl;
+    std::cout << "|\t\t         0. Skip\t\t\t             |" << std::endl;
+    std::cout << "=========================================" << std::endl;
 }
 
-void print_Archer_Ui()
-{
-    std::cout << "=======================================";
-    std::cout << "|                ARCHER               |";
-    std::cout << "|                                     |";
-    std::cout << "|              1. Attack              |";
-    std::cout << "|              2. Special             |";
-    std::cout << "|                                     |";
-    std::cout << "|              0. Skip                |";
-    std::cout << "=======================================";
-}
+//clang-format on
 
-void print_Knight_Ui()
-{
-    std::cout << "=======================================";
-    std::cout << "|                KNIGHT               |";
-    std::cout << "|                                     |";
-    std::cout << "|              1. Attack              |";
-    std::cout << "|              2. Special             |";
-    std::cout << "|                                     |";
-    std::cout << "|              0. Skip                |";
-    std::cout << "=======================================";
-}
-
-void print_Healer_Ui()
-{
-    std::cout << "=======================================";
-    std::cout << "|                HEALER               |";
-    std::cout << "|                                     |";
-    std::cout << "|              1. Attack              |";
-    std::cout << "|              2. Special             |";
-    std::cout << "|                                     |";
-    std::cout << "|              0. Skip                |";
-    std::cout << "=======================================";
-}
-
-void print_Mage_Ui()
-{
-    std::cout << "=======================================";
-    std::cout << "|                MAGE                 |";
-    std::cout << "|                                     |";
-    std::cout << "|              1. Attack              |";
-    std::cout << "|              2. Special             |";
-    std::cout << "|                                     |";
-    std::cout << "|              0. Skip                |";
-    std::cout << "=======================================";
-}
-
-// bad entity type
-
-void print_Skeleton_Ui()
-{
-    std::cout << "=======================================";
-    std::cout << "|               SKELETON              |";
-    std::cout << "|                                     |";
-    std::cout << "|              1. Attack              |";
-    std::cout << "|              2. Special             |";
-    std::cout << "|                                     |";
-    std::cout << "|              0. Skip                |";
-    std::cout << "=======================================";
-}
-
-void print_Necromancer_Ui()
-{
-    std::cout << "=======================================";
-    std::cout << "|              NECROMANCER            |";
-    std::cout << "|                                     |";
-    std::cout << "|              1. Attack              |";
-    std::cout << "|              2. Special             |";
-    std::cout << "|                                     |";
-    std::cout << "|              0. Skip                |";
-    std::cout << "=======================================";
-}
-
-void print_Ghoul_Ui()
-{
-    std::cout << "=======================================";
-    std::cout << "|                GHOUL                |";
-    std::cout << "|                                     |";
-    std::cout << "|              1. Attack              |";
-    std::cout << "|              2. Special             |";
-    std::cout << "|                                     |";
-    std::cout << "|              0. Skip                |";
-    std::cout << "=======================================";
-}
-
-void print_Zombie_Ui()
-{
-    std::cout << "=======================================";
-    std::cout << "|                ZOMBIE               |";
-    std::cout << "|                                     |";
-    std::cout << "|              1. Attack              |";
-    std::cout << "|              2. Special             |";
-    std::cout << "|                                     |";
-    std::cout << "|              0. Skip                |";
-    std::cout << "=======================================";
-}
-
-void print_Dybbuk_Ui()
-{
-    std::cout << "=======================================";
-    std::cout << "|                DYBBUK               |";
-    std::cout << "|                                     |";
-    std::cout << "|              1. Attack              |";
-    std::cout << "|              2. Special             |";
-    std::cout << "|                                     |";
-    std::cout << "|              0. Skip                |";
-    std::cout << "=======================================";
-}
-
-void print_Revenant_Ui()
-{
-    std::cout << "=======================================";
-    std::cout << "|               REVENANT              |";
-    std::cout << "|                                     |";
-    std::cout << "|              1. Attack              |";
-    std::cout << "|              2. Special             |";
-    std::cout << "|                                     |";
-    std::cout << "|              0. Skip                |";
-    std::cout << "=======================================";
-}
-
-void print_Phantom_Ui()
-{
-    std::cout << "=======================================";
-    std::cout << "|                PHANTOM             |";
-    std::cout << "|                                     |";
-    std::cout << "|              1. Attack              |";
-    std::cout << "|              2. Special             |";
-    std::cout << "|                                     |";
-    std::cout << "|              0. Skip                |";
-    std::cout << "=======================================";
-}
+#endif
