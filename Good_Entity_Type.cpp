@@ -3,6 +3,8 @@
 #include <iostream>
 #include "Entity.cpp"
 
+// different classes that inherit Entity
+// Entity constructor gets and Enum and sets the values for the different units
 class Infantryman : public Entity
 {
 public:
@@ -21,23 +23,23 @@ public:
     Knight() : Entity(KNIGHT) {};
 };
 
-// 100HP to someone for 100MP from healer, both have to be alive
 class Healer : public Entity
 {
 public:
     Healer() : Entity(HEALER) {};
 
+    // overriden heal function
     void Heal(Entity *target) override
     {
 
-        if (target->get_fraction() == GOOD)
+        if (target->get_faction() == GOOD)
         {
-            if (get_mana() >= get_minManaSpell())
+            if (get_mana() >= Spells::HEALER_HEAL)
             {
 
-                float healing = 100;
+                float healing = HealValue::HEALER_HEAL;
                 healingDone(target, healing);
-                set_mana(get_mana() - get_minManaSpell());
+                set_mana(get_mana() - Spells::HEALER_HEAL);
                 std::cout << target->get_type() << " healed for: " << healing << "\n"
                           << "Health after heal: " << target->get_health() << '\n';
                 std::cout << '\n'
@@ -57,13 +59,12 @@ public:
     }
 };
 
-// spell costs 50 MP
-//  mana 200
 class Mage : public Entity
 {
 public:
     Mage() : Entity(MAGE) {};
 
+    // overriden attack for mage because it uses mana to attack if he doesnt have mana it regens and skips its turn either way it deals damage
     void Attack(Entity *target) override
     {
         float reduction = 0;
@@ -79,13 +80,12 @@ public:
 
             else
             {
-                // has armor
                 if (target->get_armorDurability() > 0)
                 {
-                    if (get_mana() >= get_minManaSpell())
+                    if (get_mana() >= Spells::MAGE_ATTACK)
                     {
                         Damage_Reduction(target);
-                        set_mana(get_mana() - get_minManaSpell());
+                        set_mana(get_mana() - Spells::MAGE_ATTACK);
                         is_alive_check(target);
                     }
                     else
@@ -98,10 +98,10 @@ public:
                 }
                 else
                 {
-                    if (get_mana() >= get_minManaSpell())
+                    if (get_mana() >= Spells::MAGE_ATTACK)
                     {
                         Damage_NoReduction(target);
-                        set_mana(get_mana() - get_minManaSpell());
+                        set_mana(get_mana() - Spells::MAGE_ATTACK);
                         is_alive_check(target);
                     }
                     else
@@ -120,26 +120,5 @@ public:
         }
     }
 };
-
-// int main(){
-
-//     Knight k;
-
-//     Healer h;
-//     k.printInfo();
-//     h.printInfo();
-
-//     while(k.get_is_alive()==true && h.get_is_alive()==true)
-//     {
-//         if(h.get_health() < h.get_maxHP()/2)
-//         {
-//             h.Heal(&h);
-//         }
-//         // h.Attack(&m);
-//         k.Attack(&h);
-
-//     }
-
-// }
 
 #endif
