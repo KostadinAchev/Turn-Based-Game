@@ -1,31 +1,33 @@
+#include <memory>
 #include <iostream>
-#include "Bad_Entity_Type.cpp"
-#include "Good_Entity_Type.cpp"
-#include "Good_Heroes.cpp"
+#include "Bad_Entity_Type.hpp"
+#include "Good_Entity_Type.hpp"
+#include "Good_Heroes.hpp"
+#include "Bad_Heroes.hpp"
 #include "game_Ui.cpp"
 
 void NecroSkeletons()
 {
 
-    Paladin p;
-    Knight k1;
-    Knight k2;
-    Necromancer n;
+    auto p = std::make_unique<Paladin>();
+    auto k1 = std::make_unique<Knight>();
+    auto k2 = std::make_unique<Knight>();
+    auto n = std::make_unique<Necromancer>();
 
     std::vector<Entity *> dead;
     std::vector<Entity *> turn;
 
-    turn.push_back(&p);
-    turn.push_back(&k1);
-    turn.push_back(&k2);
-    turn.push_back(&n);
+    turn.push_back(p.get());
+    turn.push_back(k1.get());
+    turn.push_back(k2.get());
+    turn.push_back(n.get());
 
-    k1.death();
-    k2.death();
+    k1->death();
+    k2->death();
 
-    n.createSkeletons();
+    n->createSkeletons();
 
-    for (auto &skeleton : n.getSkeletons())
+    for (auto &skeleton : n->getSkeletons())
     {
         if (skeleton.get() != nullptr)
         {
@@ -46,11 +48,11 @@ void NecroSkeletons()
         }
         if (entity->get_faction() == Entity::goodOrBad::GOOD)
         {
-            entity->Attack(&n);
+            entity->Attack(n.get());
         }
         else
         {
-            entity->Attack(&p);
+            entity->Attack(p.get());
         }
 
         for (auto &entity : turn)

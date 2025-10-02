@@ -1,0 +1,3 @@
+C:/Users/Kostadin Achev/Desktop/Repos/Turn-Based-Game/build/CMakeFiles/game.dir
+C:/Users/Kostadin Achev/Desktop/Repos/Turn-Based-Game/build/CMakeFiles/edit_cache.dir
+C:/Users/Kostadin Achev/Desktop/Repos/Turn-Based-Game/build/CMakeFiles/rebuild_cache.dir

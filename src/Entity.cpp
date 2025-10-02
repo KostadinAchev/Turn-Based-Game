@@ -1,5 +1,3 @@
-#ifndef ENTITY_CPP
-#define ENTITY_CPP
 #include "Entity.hpp"
 
 #define MANA_PER_TURN 75
@@ -147,5 +145,3 @@ void Entity::revive(Entity *target)
         std::cout << "Can't revive target from different fraction";
     }
 }
-
-#endif
